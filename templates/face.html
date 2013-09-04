@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" charset="utf-8" src="./static/js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/pixastic.custom.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/edges2.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/camcanvas.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/comic.js"></script>
+    <title>Face</title>
+  </head>
+  <body>
+    <canvas id="myCanvasThreshold" width="493" height="584">
+    </canvas>
+    <script type="text/javascript" charset="utf-8">
+      var img = new Image();
+      img.onload = function() {
+        setFunction(passNormal);
+       // $("#myImage").pixastic("edges", {mono: true, invert: true}).pixastic("removenoise");
+        $("#myImage").pixastic("removenoise");
+        var canvas = document.getElementsByTagName("canvas")[1];
+        canvas.id = "origin";
+        var canvas2 = document.getElementById("myCanvasThreshold");
+        canvas2.width = canvas.width;
+        canvas2.height = canvas.height;
+
+        ProcessToGrayImage(canvas, canvas2);
+        OTSUAlgorithm(canvas, canvas2);
+        //$("#myCanvasThreshold").pixastic("edges2").pixastic("removenoise");
+        $("#origin").pixastic("brightness", {brightness: 0, contrast:
+          0.5}).pixastic("edges2").pixastic("removenoise");
+        canvas = document.getElementById("origin");
+        canvas2 = document.getElementById("myCanvasThreshold");
+
+        OTSUAlgorithm(canvas, canvas2, {overlay:true});
+        //$("myCanvasThreshold").pixastic("removenoise").pixastic("removenoise");
+      }
+      document.body.appendChild(img);
+      img.id = "myImage";
+      img.src = "./static/img/test2.png";
+    </script>
+  </body>
+</html>
