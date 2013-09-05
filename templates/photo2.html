@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>动画化决定!</title>
+
+    <script type="text/javascript" charset="utf-8" src="./static/js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/pixastic.custom.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/edges2.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/camcanvas.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/comic.js"></script>
+    <style type="text/css">
+
+      html {
+        background: #111111;
+        height: 100%;
+        background: linear-gradient( #333, #000);
+      }
+      #canvas {
+        display: none;
+      }
+      video, img, #startbutton {
+        display: block;
+        float: left;
+        border: 10px solid #fff;
+        border-radius: 10px;
+      }
+      #startbutton {
+        background: green;
+        border: none;
+        color: #fff;
+        margin: 100px 20px 20px 20px;
+        padding: 10px 20px;
+        font-size: 20px;
+      }
+      #container {
+        overflow: hidden;
+        width: 880px;
+        margin: 20px auto;
+      }
+    </style>
+
+  </head>
+  <body>
+
+<video id="video"></video>
+<button id="startbutton">Take photo</button>
+<canvas id="canvas"></canvas>
+<canvas id="comic"></canvas>
+<img src="http://argo.sysu.edu.cn/avatar/juhl" id="photo" alt="photo">
+
+    <script>
+(function() {
+
+  var streaming = false,
+      video        = document.querySelector('#video'),
+      canvas       = document.querySelector('#canvas'),
+      photo        = document.querySelector('#photo'),
+      startbutton  = document.querySelector('#startbutton'),
+      width = 320,
+      height = 0;
+
+  navigator.getMedia = ( navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia ||
+                         navigator.msGetUserMedia);
+
+  navigator.getMedia(
+    {
+      video: true,
+      audio: false
+    },
+    function(stream) {
+      if (navigator.mozGetUserMedia) {
+        video.mozSrcObject = stream;
+      } else {
+        var vendorURL = window.URL || window.webkitURL;
+        video.src = vendorURL.createObjectURL(stream);
+      }
+      video.play();
+    },
+    function(err) {
+      console.log("An error occured! " + err);
+    }
+  );
+
+  video.addEventListener('canplay', function(ev){
+    if (!streaming) {
+      height = video.videoHeight / (video.videoWidth/width);
+      video.setAttribute('width', width);
+      video.setAttribute('height', height);
+      canvas.setAttribute('width', width);
+      canvas.setAttribute('height', height);
+      streaming = true;
+    }
+  }, false);
+
+
+  function ostu(img) {
+0
+  }
+  function takepicture() {
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(video, 0, 0, width, height);
+      var data = canvas.toDataURL('image/png');
+      photo.setAttribute('src', data);
+      var img = new Image();
+      img.id = "myImage";
+      img.setAttribute('src', data);
+      //img.src = data;
+      setFunction(passNormal);
+      // $("#myImage").pixastic("edges", {mono: true, invert: true}).pixastic("removenoise");
+      //$("#myImage").pixastic("removenoise");
+      var option = {};
+      option = {brightness: 100, contrast: 0.0}
+      Pixastic.process(img, "brightness",option);
+      var canvas0 = option.resultCanvas;
+      canvas0.id = "origin";
+      var canvas2 = document.getElementById("comic");
+      canvas2.width = canvas0.width;
+      canvas2.height = canvas0.height;
+      ProcessToGrayImage(canvas0, canvas2);
+      OTSUAlgorithm(canvas0, canvas2);
+
+      option = {}
+      Pixastic.process(img, "edges2",option);
+      canvas0 = option.resultCanvas;
+      OTSUAlgorithm(canvas0, canvas2, {overlay:true});
+
+      //canvas2 = document.getElementById("comic");
+      //ProcessToGrayImage(canvas0, canvas2);
+  }
+
+  startbutton.addEventListener('click', function(ev){
+      takepicture();
+      ev.preventDefault();
+      }, false);
+
+})();
+</script>
+</body>
+</html>

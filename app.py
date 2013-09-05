@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-  return render_template("face.html")
+  return render_template("photo2.html")
 
 if __name__ == "__main__":
   app.run()
