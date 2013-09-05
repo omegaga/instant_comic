@@ -16,7 +16,7 @@
         height: 100%;
         background: linear-gradient( #333, #000);
       }
-      canvas {
+      #canvas {
         display: none;
       }
       video, img, #startbutton {
@@ -46,6 +46,7 @@
 <video id="video"></video>
 <button id="startbutton">Take photo</button>
 <canvas id="canvas"></canvas>
+<canvas id="comic"></canvas>
 <img src="http://argo.sysu.edu.cn/avatar/juhl" id="photo" alt="photo">
 
     <script>
@@ -94,31 +95,10 @@
     }
   }, false);
 
+
   function ostu(img) {
-
-        setFunction(passNormal);
-       // $("#myImage").pixastic("edges", {mono: true, invert: true}).pixastic("removenoise");
-        $("#myImage").pixastic("removenoise");
-        var canvas = document.getElementsByTagName("canvas")[1];
-        canvas.id = "origin";
-        var canvas2 = document.getElementById("canvas");
-        canvas2.width = canvas.width;
-        canvas2.height = canvas.height;
-
-        ProcessToGrayImage(canvas, canvas2);
-        OTSUAlgorithm(canvas, canvas2);
-        //$("#myCanvasThreshold").pixastic("edges2").pixastic("removenoise");
-        $("#origin").pixastic("brightness", {brightness: 0, contrast:
-          0.5}).pixastic("edges2").pixastic("removenoise");
-        canvas = document.getElementById("origin");
-        canvas2 = document.getElementById("myCanvasThreshold");
-
-        OTSUAlgorithm(canvas, canvas2, {overlay:true});
-        //$("myCanvasThreshold").pixastic("removenoise").pixastic("removenoise");
-      }
-      document.body.appendChild(img);
+0
   }
-
   function takepicture() {
       canvas.width = width;
       canvas.height = height;
@@ -127,14 +107,35 @@
       photo.setAttribute('src', data);
       var img = new Image();
       img.id = "myImage";
-      img.src = data;
-      ostu(img);
+      img.setAttribute('src', data);
+      //img.src = data;
+      setFunction(passNormal);
+      // $("#myImage").pixastic("edges", {mono: true, invert: true}).pixastic("removenoise");
+      //$("#myImage").pixastic("removenoise");
+      var option = {};
+      option = {brightness: 100, contrast: 0.0}
+      Pixastic.process(img, "brightness",option);
+      var canvas0 = option.resultCanvas;
+      canvas0.id = "origin";
+      var canvas2 = document.getElementById("comic");
+      canvas2.width = canvas0.width;
+      canvas2.height = canvas0.height;
+      ProcessToGrayImage(canvas0, canvas2);
+      OTSUAlgorithm(canvas0, canvas2);
+
+      option = {}
+      Pixastic.process(img, "edges2",option);
+      canvas0 = option.resultCanvas;
+      OTSUAlgorithm(canvas0, canvas2, {overlay:true});
+
+      //canvas2 = document.getElementById("comic");
+      //ProcessToGrayImage(canvas0, canvas2);
   }
 
   startbutton.addEventListener('click', function(ev){
       takepicture();
-    ev.preventDefault();
-  }, false);
+      ev.preventDefault();
+      }, false);
 
 })();
 </script>
