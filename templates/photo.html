@@ -8,7 +8,7 @@
     <script type="text/javascript" charset="utf-8" src="./static/js/pixastic.custom.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/edges2.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/camcanvas.js"></script>
-    <script type="text/javascript" charset="utf-8" src="./static/js/comic.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/comic2.js"></script>
     <style type="text/css">
 
       html {
@@ -121,12 +121,12 @@
       canvas2.width = canvas0.width;
       canvas2.height = canvas0.height;
       ProcessToGrayImage(canvas0, canvas2);
-      OTSUAlgorithm(canvas0, canvas2);
+      newAlgorithm(canvas0, canvas2);
 
       option = {}
       Pixastic.process(img, "edges2",option);
       canvas0 = option.resultCanvas;
-      OTSUAlgorithm(canvas0, canvas2, {overlay:true});
+      newAlgorithm(canvas0, canvas2, {overlay:true});
 
       //canvas2 = document.getElementById("comic");
       //ProcessToGrayImage(canvas0, canvas2);
