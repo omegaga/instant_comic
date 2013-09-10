@@ -6,5 +6,9 @@ app = Flask(__name__)
 def index():
   return render_template("comic.html")
 
+@app.route("/test")
+def test():
+  return render_template("comicback.html")
+
 if __name__ == "__main__":
-  app.run()
+  app.run("0.0.0.0")

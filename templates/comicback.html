@@ -71,7 +71,7 @@
   </head>
   <body>
     <div id="container">
-      <video id="video"></video>
+      <video id="video" autoplay></video>
       <canvas id="rtcanvas"></canvas>
     </div>
     <button id="startbutton">Take photo</button>
@@ -90,11 +90,26 @@
   var ctrack = new clm.tracker({useWebGL : true});
   ctrack.init(pModel);
 
-  navigator.getMedia = ( navigator.getUserMedia ||
+  navigator.getUserMedia = ( navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia ||
                          navigator.msGetUserMedia);
   // Believe me I have no idea what heppen here... :(
+function fallback(e) {
+  video.src = 'fallbackvideo.webm';
+}
+
+function success(stream) {
+  video.src = window.URL.createObjectURL(stream);
+  video.play();
+}
+
+if (!navigator.getUserMedia) {
+  fallback();
+} else {
+  navigator.getUserMedia({video: true}, success, fallback);
+}
+/*
   navigator.getMedia(
     {
       video: true,
@@ -112,7 +127,8 @@
     function(err) {
       console.log("An error occured! " + err);
     }
-  );
+    );
+    */
 
 
   video.addEventListener('canplay', function(ev){
