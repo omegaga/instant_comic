@@ -2,13 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>动画化决定!</title>
+    <title>Animation Decision!</title>
 
     <script type="text/javascript" charset="utf-8" src="./static/js/jquery.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/pixastic.custom.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/edges2.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/camcanvas.js"></script>
-    <script type="text/javascript" charset="utf-8" src="./static/js/comic2.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/rtcomic.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/clm.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/utils.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/jsfeat-min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/frontalface.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/jsfeat_detect.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/numeric-1.2.6.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/mosse.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/left_eye_filter.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/right_eye_filter.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/nose_filter.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/ccv.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/cascade.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/svmfilter_webgl.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/svmfilter_fft.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/mossefilter.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/Stats.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/models/model_pca_20_svm.js"></script>
     <style type="text/css">
 
       html {
@@ -16,14 +33,32 @@
         height: 100%;
         background: linear-gradient( #333, #000);
       }
-      #canvas {
-        display: none;
+      #rtcanvas {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        -o-transform : scaleX(-1);
+        -webkit-transform : scaleX(-1);
+        transform : scaleX(-1);
+        -ms-filter : fliph; /*IE*/
+        filter : fliph; /*IE*/
+        display: none;/*owo*/
+        float: left;
+        border: 10px solid #fff;
+        border-radius: 10px;
+      }
+      #video {
+        -o-transform : scaleX(-1);
+	-webkit-transform : scaleX(-1);
+        transform : scaleX(-1);
+        -ms-filter : fliph; /*IE*/
+        filter : fliph; /*IE*/
       }
       video, img, #startbutton {
         display: block;
         float: left;
-        border: 10px solid #fff;
-        border-radius: 10px;
+        /*border: 10px solid #fff;
+        border-radius: 10px;*/
       }
       #startbutton {
         background: green;
@@ -34,31 +69,41 @@
         font-size: 20px;
       }
       #container {
+          position : relative;
+          width : 600px;
+      }
+      /*
+      #container {
         overflow: hidden;
-        width: 880px;
+        width: 600px;
         margin: 20px auto;
       }
+      */
+      
     </style>
 
   </head>
   <body>
-
-<video id="video"></video>
-<button id="startbutton">Take photo</button>
-<canvas id="canvas"></canvas>
-<canvas id="comic"></canvas>
-<img src="http://argo.sysu.edu.cn/avatar/juhl" id="photo" alt="photo">
+    <div id="container">
+      <video id="video"></video>
+      <canvas id="rtcanvas"></canvas>
+    </div>
+    <button id="startbutton">Take photo</button>
+    <canvas id="comic"></canvas>
+    <img src="http://argo.sysu.edu.cn/avatar/juhl" id="photo" alt="photo">
 
     <script>
 (function() {
 
   var streaming = false,
       video        = document.querySelector('#video'),
-      canvas       = document.querySelector('#canvas'),
+      rtcanvas       = document.querySelector('#rtcanvas'),
       photo        = document.querySelector('#photo'),
       startbutton  = document.querySelector('#startbutton'),
       width = 320,
       height = 0;
+  var ctrack = new clm.tracker({useWebGL : true});
+  ctrack.init(pModel);
 
   navigator.getMedia = ( navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
@@ -89,51 +134,62 @@
       height = video.videoHeight / (video.videoWidth/width);
       video.setAttribute('width', width);
       video.setAttribute('height', height);
-      canvas.setAttribute('width', width);
-      canvas.setAttribute('height', height);
+      rtcanvas.setAttribute('width', width);
+      rtcanvas.setAttribute('height', height);
       streaming = true;
     }
   }, false);
 
 
   function ostu(img) {
-0
+      0
   }
   function takepicture() {
-      canvas.width = width;
-      canvas.height = height;
-      canvas.getContext('2d').drawImage(video, 0, 0, width, height);
-      var data = canvas.toDataURL('image/png');
+      rtcanvas.width = width;
+      rtcanvas.height = height;
+      rtcanvas.getContext('2d').drawImage(video, 0, 0, width, height);
+      var data = rtcanvas.toDataURL('image/png');
       photo.setAttribute('src', data);
       var img = new Image();
       img.id = "myImage";
       img.setAttribute('src', data);
-      //img.src = data;
       setFunction(passNormal);
-      // $("#myImage").pixastic("edges", {mono: true, invert: true}).pixastic("removenoise");
-      //$("#myImage").pixastic("removenoise");
       var option = {};
       option = {brightness: 100, contrast: 0.0}
-      Pixastic.process(img, "brightness",option);
+      Pixastic.process(img, "brightness", option);
       var canvas0 = option.resultCanvas;
       canvas0.id = "origin";
-      var canvas2 = document.getElementById("comic");
-      canvas2.width = canvas0.width;
-      canvas2.height = canvas0.height;
-      ProcessToGrayImage(canvas0, canvas2);
-      newAlgorithm(canvas0, canvas2);
+      var cocanvas = document.getElementById("comic");
+      cocanvas.width = canvas0.width;
+      cocanvas.height = canvas0.height;
+      //function self-defined
+      ProcessToGrayImage(canvas0, cocanvas);
+      newAlgorithm(canvas0, cocanvas);
 
       option = {}
       Pixastic.process(img, "edges2",option);
       canvas0 = option.resultCanvas;
-      newAlgorithm(canvas0, canvas2, {overlay:true});
-
-      //canvas2 = document.getElementById("comic");
-      //ProcessToGrayImage(canvas0, canvas2);
+      //function self-defined
+      newAlgorithm(canvas0, cocanvas, {overlay:true});
+  }
+  function drawLoop() {
+      requestAnimFrame(drawLoop);
+      var comicCanvas = document.getElementById("comic");
+      var comicCT = comicCanvas.getContext("2d");
+      comicCT.clearRect(0, 0, comicCanvas.width, comicCanvas.height);
+      takepicture();
+      if (ctrack.getCurrentPosition()) {
+          ctrack.draw(comicCanvas);
+      }
+  }
+  function startVideo() {
+      ctrack.start(video);
+      drawLoop();
   }
 
   startbutton.addEventListener('click', function(ev){
-      takepicture();
+      //takepicture();
+      startVideo();
       ev.preventDefault();
       }, false);
 
