@@ -28,9 +28,9 @@
     <script type="text/javascript" charset="utf-8" src="./static/models/model_pca_20_svm.js"></script>
     <style type="text/css">
       html {
-        background: #111111;
+        /*background: #111111;*/
         height: 100%;
-        background: linear-gradient( #333, #000);
+        /*background: linear-gradient( #333, #000);*/
       }
       #rtcanvas {
         position: absolute;
@@ -52,7 +52,7 @@
         filter : fliph; /*IE*/
         /*display: none;*/
       }
-      #startbutton {
+      #startbutton, #submit {
         background: green;
         border: none;
         color: #fff;
@@ -75,20 +75,27 @@
       <canvas id="rtcanvas"></canvas>
     </div>
     <button id="startbutton">Take photo</button>
+    <canvas id="canvas" height=300 width=50></canvas>
+    <input type="text" id="words" width=200/>
+    <button id="submit">submit</button>
     <script>
 (function() {
 
   var streaming = false,
       video        = document.querySelector('#video'),
-      rtcanvas       = document.querySelector('#rtcanvas'),
+      rtcanvas     = document.querySelector('#rtcanvas'),
       photo        = document.querySelector('#photo'),
       startbutton  = document.querySelector('#startbutton'),
+      submit       = document.querySelector('#submit'),
+      words        = document.querySelector('#words'),
       //width = 320,
       width = 480,
       //width = 640,
       height = 0;
+  /*
   var ctrack = new clm.tracker({useWebGL : true});
   ctrack.init(pModel);
+  */
 
   navigator.getMedia = ( navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
@@ -155,26 +162,84 @@
       //function self-defined
       newAlgorithm(canvas0, rtcanvas, {overlay:true});
   }
+  function dImage() {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      var img = new Image();
+      img.onload = function() {
+          ctx.drawImage(img, 0, 0);
+      }
+      img.src = "../static/img/test3.jpg";
+      var canvasOffset = $("#canvas").offset();
+      var offsetX = canvasOffset.left;
+      var offsetY = canvasOffset.top;
+      var canvasWidth = canvas.width;
+      var canvasHeight = canvas.height;
+      var isDragging = false;
+      function handleMouseDown(e) {
+          canMouseX = parseInt(e.clientX - offsetX);
+          canMouseY = parseInt(e.clientY - offsetY);
+          isDragging = true;
+      }
+      function handleMouseUp(e) {
+          canMouseX = parseInt(e.clientX - offsetX);
+          canMouseY = parseInt(e.clientY - offsetY);
+          isDragging = false;
+      }
+      function handleMouseOut(e) {
+          canMouseX = parseInt(e.clientX - offsetX);
+          canMouseY = parseInt(e.clientY - offsetY);
+      }
+      function handleMouseMove(e) {
+          canMouseX = parseInt(e.clientX - offsetX);
+          canMouseY = parseInt(e.clientY - offsetY);
+          // if the drag flag is set, clear the canvas and draw the image
+          if (isDragging) {
+              ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+              ctx.drawImage(img, canMouseX - 128 / 2, canMouseY - 120 / 2, img.width, img.height);
+          }
+      }
+      $("#canvas").mousedown(function(e){handleMouseDown(e);});
+      $("#canvas").mousemove(function(e){handleMouseMove(e);});
+      $("#canvas").mouseup(function(e){handleMouseUp(e);});
+      $("#canvas").mouseout(function(e){handleMouseOut(e);});
+  }
   function drawLoop() {
       requestAnimFrame(drawLoop);
       var rtct = rtcanvas.getContext("2d");
       rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
       takepicture();
+      
+      /*
       if (ctrack.getCurrentPosition()) {
           ctrack.draw(rtcanvas);
       }
+      */
   }
   function startVideo() {
-     video.display = "none";
-     ctrack.start(video);
-     drawLoop();
+      video.display = "none";
+      //dImage();
+      //ctrack.start(video);
+      drawLoop();
+  }
+  function drawOnCanvas() {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      var string = words.value;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = 'italic 12pt Heiti';
+      ctx.fillText(string, 0, 50);
   }
 
   startbutton.addEventListener('click', function(ev){
       startVideo();
       ev.preventDefault();
   }, false);
-
+  submit.addEventListener('click', function(ev) {
+      drawOnCanvas();
+      ev.preventDefault();
+  }, false);
+  
 })();
 </script>
 </body>
