@@ -74,25 +74,29 @@
       <video id="video"></video>
       <canvas id="rtcanvas"></canvas>
     </div>
-    <button id="startbutton">Take photo</button>
-    <canvas id="canvas" height=300 width=50></canvas>
+    <button id="startbutton">start</button>
+    <button id="take">Take photo</button>
+    <canvas id="canvas" height=300 width=500></canvas>
     <input type="text" id="words" width=200/>
     <button id="submit">submit</button>
+    <canvas id="comcanvas"></canvas>
     <script>
 (function() {
 
   var streaming = false,
       video        = document.querySelector('#video'),
       rtcanvas     = document.querySelector('#rtcanvas'),
+      comcanvas    = document.querySelector('#comcanvas'),
       photo        = document.querySelector('#photo'),
       startbutton  = document.querySelector('#startbutton'),
+      takebutton   = document.querySelector('#take'),
       submit       = document.querySelector('#submit'),
       words        = document.querySelector('#words'),
-      //width = 320,
       width = 480,
-      //width = 640,
-      height = 0;
-  /*
+      height = 0,
+      counter = 0;
+    
+    /*
   var ctrack = new clm.tracker({useWebGL : true});
   ctrack.init(pModel);
   */
@@ -129,16 +133,16 @@
       video.setAttribute('height', height);
       rtcanvas.setAttribute('width', width);
       rtcanvas.setAttribute('height', height);
+      comcanvas.setAttribute('width', width * 2);
+      comcanvas.setAttribute('height', height * 2);
       streaming = true;
     }
   }, false);
 
-
   function ostu(img) {
       0
   }
-  function takepicture() {
-	  var time = Date.now();
+  function drawrtCanvas() {
       rtcanvas.width = width;
       rtcanvas.height = height;
       rtcanvas.getContext('2d').drawImage(video, 0, 0, width, height);
@@ -164,15 +168,37 @@
       Pixastic.process(canvas0, "edges2",option);
       canvas0 = option.resultCanvas;
       //function self-defined
-	  newAlgorithm(canvas0, rtcanvas, {overlay:true});
-	  canvas0 = document.getElementById("origin");
-	  delBad(rtcanvas);
-	  alert(Date.now() - time);
+      newAlgorithm(canvas0, rtcanvas, {overlay:true});
+      canvas0 = document.getElementById("origin");
+      delBad(rtcanvas);
+  }
+  function takePhoto() {
+      var comctx = comcanvas.getContext('2d');
+      var data = rtcanvas.toDataURL('image/png');
+      //photo.setAttribute('src', data);
+      var img = new Image();
+      img.id = "myImage";
+      img.setAttribute('src', data);
+      if (counter == 0) {
+          comctx.drawImage(img, 0, 0);
+      } else  if (counter == 1) {
+          comctx.drawImage(img, comcanvas.width / 2, 0);
+      } else if (counter == 2) {
+          comctx.drawImage(img, 0, comcanvas.height / 2);
+      } else if (counter == 3) {
+          comctx.drawImage(img, comcanvas.width / 2, comcanvas.height / 2);
+      }
+      ++counter;
+      if (counter == 4) {
+          counter = 0;
+      }
   }
   function dImage() {
       var canvas = document.getElementById("canvas");
       var ctx = canvas.getContext("2d");
       var img = new Image();
+      img.width = 100;
+      img.height = 100;
       img.onload = function() {
           ctx.drawImage(img, 0, 0);
       }
@@ -203,7 +229,7 @@
           // if the drag flag is set, clear the canvas and draw the image
           if (isDragging) {
               ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-              ctx.drawImage(img, canMouseX - 128 / 2, canMouseY - 120 / 2, img.width, img.height);
+              ctx.drawImage(img, canMouseX - 128 / 2, canMouseY - 120 / 2, 200, 200);
           }
       }
       $("#canvas").mousedown(function(e){handleMouseDown(e);});
@@ -215,8 +241,8 @@
       requestAnimFrame(drawLoop);
       var rtct = rtcanvas.getContext("2d");
       rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
-      takepicture();
-	  /*
+      drawrtCanvas();
+      /*
       if (ctrack.getCurrentPosition()) {
           ctrack.draw(rtcanvas);
       }
@@ -224,7 +250,7 @@
   }
   function startVideo() {
       video.display = "none";
-      //dImage();
+      dImage();
       //ctrack.start(video);
       drawLoop();
   }
@@ -235,6 +261,10 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.font = 'italic 12pt Heiti';
       ctx.fillText(string, 0, 50);
+      var data = canvas.toDataURL('image/png');
+      var img = new Image();
+      img.id = "myImage";
+      img.setAttribute('src', data);
   }
 
   startbutton.addEventListener('click', function(ev){
@@ -243,6 +273,10 @@
   }, false);
   submit.addEventListener('click', function(ev) {
       drawOnCanvas();
+      ev.preventDefault();
+  }, false);
+  takebutton.addEventListener('click', function(ev) {
+      takePhoto();
       ev.preventDefault();
   }, false);
   
