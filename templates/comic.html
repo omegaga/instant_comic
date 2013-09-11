@@ -131,6 +131,7 @@
       0
   }
   function takepicture() {
+	  var time = Date.now();
       rtcanvas.width = width;
       rtcanvas.height = height;
       rtcanvas.getContext('2d').drawImage(video, 0, 0, width, height);
@@ -149,20 +150,28 @@
       ProcessToGrayImage(canvas0, rtcanvas);
       newAlgorithm(canvas0, rtcanvas);
 
+      option = {amount:0.025}
+      Pixastic.process(img, "blur",option);
+      canvas0 = option.resultCanvas;
       option = {}
-      Pixastic.process(img, "edges2",option);
+      Pixastic.process(canvas0, "edges2",option);
       canvas0 = option.resultCanvas;
       //function self-defined
-      newAlgorithm(canvas0, rtcanvas, {overlay:true});
+	  newAlgorithm(canvas0, rtcanvas, {overlay:true});
+	  canvas0 = document.getElementById("origin");
+	  delBad(rtcanvas);
+	  alert(Date.now() - time);
   }
   function drawLoop() {
       requestAnimFrame(drawLoop);
       var rtct = rtcanvas.getContext("2d");
       rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
       takepicture();
+	  /*
       if (ctrack.getCurrentPosition()) {
           ctrack.draw(rtcanvas);
       }
+	  */
   }
   function startVideo() {
      video.display = "none";
