@@ -75,7 +75,7 @@
       <canvas id="rtcanvas"></canvas>
     </div>
     <button id="startbutton">Take photo</button>
-    <canvas id="canvas" height=300 width=50></canvas>
+    <canvas id="canvas" height=300 width=55></canvas>
     <input type="text" id="words" width=200/>
     <button id="submit">submit</button>
     <script>
@@ -133,12 +133,8 @@
     }
   }, false);
 
-
-  function ostu(img) {
-      0
-  }
   function takepicture() {
-	  var time = Date.now();
+//	  var time = Date.now();
       rtcanvas.width = width;
       rtcanvas.height = height;
       rtcanvas.getContext('2d').drawImage(video, 0, 0, width, height);
@@ -167,7 +163,7 @@
 	  newAlgorithm(canvas0, rtcanvas, {overlay:true});
 	  canvas0 = document.getElementById("origin");
 	  delBad(rtcanvas);
-	  alert(Date.now() - time);
+//	  alert(Date.now() - time);
   }
   function dImage() {
       var canvas = document.getElementById("canvas");
@@ -228,13 +224,33 @@
       //ctrack.start(video);
       drawLoop();
   }
+
+  function isChinese(str)
+  {
+	  if(/.*[\u4e00-\u9fa5]+.*$/.test(str)) 
+		  return true; 
+	  return false; 
+  } 	  
+
   function drawOnCanvas() {
       var canvas = document.getElementById("canvas");
       var ctx = canvas.getContext("2d");
       var string = words.value;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.font = 'italic 12pt Heiti';
-      ctx.fillText(string, 0, 50);
+	  var i;
+	  var cnt = 0;
+	  for (i = 0 ; i < string.length ; i++)
+	  {
+		  if (isChinese(string[i]) && cnt % 6 == 5) cnt++;
+		  var height = 15 + (parseInt(cnt / 6)) * 30;
+		  var width = (cnt % 6) * (50 / 6);
+		  console.log(cnt.toString()+" "+ width.toString() + " " + height.toString());
+		  ctx.fillText(string[i], width, height);
+		  if (isChinese(string[i]) == true)
+			  cnt += 2;
+		  else cnt++;
+	  }
   }
 
   startbutton.addEventListener('click', function(ev){
