@@ -199,6 +199,7 @@ function newAlgorithm(canvas, new_canvas, option) {
 			var ids = (j + i*canvasData.width)*4;
 			//取得像素的R分量的值
 			var r = canvasData.data[ids];
+
 			var x1 = i + 1 - radius , x2 = i + 1 + radius;
 			var y1 = j + 1 - radius , y2 = j + 1 + radius;
 			if (x1 < 1) x1 = 1;
@@ -222,7 +223,70 @@ function newAlgorithm(canvas, new_canvas, option) {
 			canvasData.data[ids+2] = gray;
 		}
 	}
+
 	//显示二值化图像
 	var newImage = new_canvas.getContext('2d');
 	newImage.putImageData(canvasData,0,0);
+}
+
+function delBad(canvas)
+{
+	var flag = false;
+	var i,j;
+	//获取灰度图像的信息
+	var imageInfo = GetGrayImageInfo(canvas);
+	var canvasData = imageInfo[0];
+	if(imageInfo == null){
+		window.alert("图像还没有转化为灰度图像！");
+		return;
+	}
+	var sum2 = new Array();
+	var radius2 = 1;
+	sum2.push(new Array());
+	for (j = 0 ; j <= canvasData.width ; j++)
+		sum2[0].push(0);
+	for (i = 0 ; i < canvasData.height ; i++)
+	{
+		sum2.push(new Array());
+		sum2[i+1].push(0);
+		for (j = 0 ; j < canvasData.width ; j++)
+		{
+			var ids = (j + i * canvasData.width)*4;
+			sum2[i+1].push(canvasData.data[ids]);
+		}
+	}
+
+	for (i = 1 ; i <= canvasData.height ; i++)
+		for (j = 1 ; j <= canvasData.width ; j++)
+			sum2[i][j] = sum2[i-1][j] + sum2[i][j-1] - sum2[i-1][j-1] + sum2[i][j];
+
+	for (i = 0 ; i < canvasData.height ; i++)
+		for (j = 0 ; j < canvasData.width ; j++)
+		{
+			//取得每一点的位置
+			var ids = (j + i*canvasData.width)*4;
+			//取得像素的R分量的值
+			var r = canvasData.data[ids];
+
+			var x1 = i + 1 - radius2 , x2 = i + 1 + radius2;
+			var y1 = j + 1 - radius2 , y2 = j + 1 + radius2;
+			if (x1 < 1) x1 = 1;
+			if (y1 < 1) y1 = 1;
+			if (x2 > canvasData.height) x2 = canvasData.height;
+			if (y2 > canvasData.width) y2 = canvasData.width;
+
+			var nThresh = sum2[x2][y2] - sum2[x1-1][y2] - sum2[x2][y1-1] + sum2[x1-1][y1-1];
+			var count = (x2 - x1 + 1) * (y2 - y1 + 1);
+
+			var gray = r;
+			if (nThresh >= 255 * (count - 2))
+			{
+				gray = 255;
+			}
+			canvasData.data[ids+0] = gray;
+			canvasData.data[ids+1] = gray;
+			canvasData.data[ids+2] = gray;
+		}
+	var image = canvas.getContext('2d');
+	image.putImageData(canvasData,0,0);
 }
