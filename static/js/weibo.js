@@ -4,8 +4,8 @@ function addEntry()
 	var canvas = document.getElementById("rtcanvas");
 	var url = canvas.toDataURL('image/jpg');
 	bShare.addEntry({
-		summary:"I have my own comic!" ,
-		pic : url
+		summary:"这里的漫画很好玩，你也来吧！" ,
+		//pic : url
 	});
 }
 
