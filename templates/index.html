@@ -108,7 +108,9 @@
     <div class="row-fluid"> <!-- second row starts -->
     <button id="startbutton" class="btn btn-large btn-success">start</button>
     <button id="take" class="btn btn-large btn-success">Take photo</button>
+    <!--
     <canvas id="canvas" height=300 width=55></canvas>
+    -->
     <input type="text" id="words" width=200/>
     <button id="submit" class="btn btn-large btn-success">submit</button>
   </div> <!-- second row ends -->
@@ -321,6 +323,7 @@
       return false; 
   }
 
+  /*
   function drawOnCanvas() {
       var canvas = document.getElementById("canvas");
       var ctx = canvas.getContext("2d");
@@ -345,6 +348,7 @@
       }
       
   }
+  */
 
   startbutton.addEventListener('click', function(ev){
       startVideo();
