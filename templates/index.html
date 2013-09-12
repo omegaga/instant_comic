@@ -16,6 +16,8 @@
     <script type="text/javascript" charset="utf-8" src="./static/js/utils.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/jsfeat-min.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/jsfeat_detect.js"></script>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script> 
     <!--
     <script type="text/javascript" charset="utf-8" src="./static/js/frontalface.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/clm.js"></script>
@@ -116,10 +118,11 @@
     -->
     <input type="text" id="words" width=150/>
     <!-- <button id="submit" class="btn btn-large btn-success">Submit</button> -->
-    <button id="submit0" class="btn btn-large btn-success">1</button>
-    <button id="submit1" class="btn btn-large btn-success">2</button>
-    <button id="submit2" class="btn btn-large btn-success">3</button>
-    <button id="submit3" class="btn btn-large btn-success">4</button>
+    <!-- <button id="submit0" class="btn btn-large btn-success">1</button> -->
+    <!-- <button id="submit1" class="btn btn-large btn-success">2</button> -->
+    <!-- <button id="submit2" class="btn btn-large btn-success">3</button> -->
+    <!-- <button id="submit3" class="btn btn-large btn-success">4</button> -->
+    <i id="question" class="icon-question-sign" rel="tooltip"></i>
     <input type="file" id="file" class=" btn-larege" />
     <button id="drawbutton" class="btn btn-large btn-success">Draw</button>
   </div> <!-- second row ends -->
@@ -140,6 +143,7 @@
      video        = document.querySelector('#video'),
      rtcanvas     = document.querySelector('#rtcanvas'),
      photo        = document.querySelector('#photo'),
+     question     = document.querySelector('#question'),
      drawbutton   = document.querySelector('#drawbutton'),
      filterbutton = document.querySelector('#filterbutton'),
      //filter       = document.querySelector('#filtercheck'),
@@ -420,6 +424,7 @@ function dImage(index) {
     ev.preventDefault();
   }, false);
   */
+  /*
   submit0.addEventListener('click', function(ev) {
       drawOnCanvas(0);
       ev.preventDefault();
@@ -436,7 +441,7 @@ function dImage(index) {
       drawOnCanvas(3);
       ev.preventDefault();
   }, false);
-  
+  */
   takebutton.addEventListener('click', function(ev) {
     takePhoto();
     ev.preventDefault();
@@ -445,6 +450,11 @@ function dImage(index) {
       drawlocalimage();
       ev.preventDefault();
   },false);
+  $('#question').tooltip({animation: true, title: '输入文字后，点击相应图片即可加文字到对应图片中', trigger: 'hover focus click'});
+  $("#comcanvas0").mousedown(function(e){drawOnCanvas(0)});
+  $("#comcanvas1").mousedown(function(e){drawOnCanvas(1)});
+  $("#comcanvas2").mousedown(function(e){drawOnCanvas(2)});
+  $("#comcanvas3").mousedown(function(e){drawOnCanvas(3)});
   /*
   $('input[name=rtcheck]').change(function(){
 
@@ -490,8 +500,7 @@ function dImage(index) {
 </div>
 </div><!--container ends -->
 
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="./static/js/bootstrap.min.js"></script> 
+
 <script type="text/javascript">
   savepic.addEventListener('click', function(ev) {
       savePic();
