@@ -99,9 +99,9 @@
   </div> <!-- first row ends -->
 
   <div class="row-fluid"> <!-- second row starts -->
-    <button id="startbutton" class="btn btn-large btn-success">Start</button>
-    <input type="checkbox"  id="filtercheck" name="rtcheck">
-    <label class="control-label" for="filtercheck" style="display:inline"> Filter On</label>
+    <button id="filterbutton" class="btn btn-large btn-success">Filter</button>
+    <!-- <input type="checkbox"  id="filtercheck" name="rtcheck"> -->
+    <!-- <label class="control-label" for="filtercheck" style="display:inline"> Filter On</label> -->
     <button id="take" class="btn btn-large btn-success">Take photo</button>
     <!--
     <canvas id="canvas" height=300 width=55></canvas>
@@ -124,8 +124,8 @@
      video        = document.querySelector('#video'),
      rtcanvas     = document.querySelector('#rtcanvas'),
      photo        = document.querySelector('#photo'),
-     startbutton  = document.querySelector('#startbutton'),
-     filter       = document.querySelector('#filtercheck'),
+     filterbutton  = document.querySelector('#filterbutton'),
+     //filter       = document.querySelector('#filtercheck'),
      filtercanvas = document.querySelector('#filtercanvas'),
      comcanvas0   = document.querySelector('#comcanvas0'),
      comcanvas1   = document.querySelector('#comcanvas1'),
@@ -398,8 +398,19 @@ function drawOnCanvas() {
           drawfilter();
       }
   }
-  startbutton.addEventListener('click', function(ev){
-    startVideo();
+  function startFilter() {
+      isfilter = !isfilter;
+      if (isfilter) {
+          video.style.display = "none";
+          filtercanvas.style.display = "block";
+          drawLoop();
+      } else {
+          filtercanvas.style.display = "none";
+          video.style.display = "block";
+      }
+  }
+  filterbutton.addEventListener('click', function(ev){
+    startFilter();
     ev.preventDefault();
   }, false);
   submit.addEventListener('click', function(ev) {
@@ -410,6 +421,7 @@ function drawOnCanvas() {
     takePhoto();
     ev.preventDefault();
   }, false);
+  /*
   $('input[name=rtcheck]').change(function(){
 
     if($(this).is(':checked'))
@@ -425,7 +437,8 @@ function drawOnCanvas() {
         video.style.display = "block";
         isfilter = false;
     }    
-});
+  });
+  */
   init();
 })();
 </script>
