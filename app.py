@@ -8,7 +8,7 @@ def index():
 
 @app.route("/test")
 def test():
-  return render_template("comicback.html")
+  return render_template("test.html")
   
 @app.route("/original")
 def original():
