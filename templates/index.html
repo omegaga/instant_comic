@@ -135,6 +135,7 @@
   <script>
     (function() {
      var streaming = false,
+     savepic      = document.querySelector('#savepic'),
      yonkoma      = document.querySelector('#yonkoma'),
      video        = document.querySelector('#video'),
      rtcanvas     = document.querySelector('#rtcanvas'),
@@ -149,8 +150,7 @@
      comcanvas3   = document.querySelector('#comcanvas3'),
      takebutton   = document.querySelector('#take'),
      //submit       = document.querySelector('#submit'),
-     submit0      = document.querySelector('#submit0'),
-     submit1      = document.querySelector('#submit1'),
+     submit0      = document.querySelector('#submit0'), submit1      = document.querySelector('#submit1'),
      submit2      = document.querySelector('#submit2'),
      submit3      = document.querySelector('#submit3'),
      words        = document.querySelector('#words'),
@@ -434,6 +434,7 @@ function dImage(index) {
       drawOnCanvas(3);
       ev.preventDefault();
   }, false);
+  
   takebutton.addEventListener('click', function(ev) {
     takePhoto();
     ev.preventDefault();
@@ -441,7 +442,7 @@ function dImage(index) {
   drawbutton.addEventListener('click', function(ev) {
       drawlocalimage();
       ev.preventDefault();
-  }, false);
+  },false);
   /*
   $('input[name=rtcheck]').change(function(){
 
@@ -488,6 +489,11 @@ function dImage(index) {
 </div><!--container ends -->
 
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="./static/js/bootstrap.min.js"></script>
+<script src="./static/js/bootstrap.min.js"></script> 
+<script type="text/javascript">
+  savepic.addEventListener('click', function(ev) {
+      savePic();
+  },false);
+</script>
   </body>
 </html>
