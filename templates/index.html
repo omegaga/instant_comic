@@ -39,10 +39,10 @@
 	<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/weibo.js"></script>
     <style type="text/css">
-      html {
+      body {
         /*background: #111111;*/
         height: 100%;
-        /*background: linear-gradient( #333, #000);*/
+        background: linear-gradient( #333, #000);
       }
       #yonkoma {
 
@@ -69,19 +69,11 @@
         width : 480px;
         height : 360px;
       }
-      #menu a {
-   background: url("./standby/img/button.gif") top left no-repeat;
-   }
-#menu a:hover {
-   background-image: url("./static/img/button_over.gif");
-   }
-#menu a:active {
-   background-image: url("./static/img/button_active.gif");
-   }
     </style>
 
   </head>
   <body>
+    <div class="lcontainer">
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -119,7 +111,9 @@
   <div class="row-fluid"> <!-- second row starts -->
      <button id="filterbutton" class="btn btn-large btn-success">Filter</button>
     <button id="take" class="btn btn-large btn-success">Take photo</button>
+  </div>
     <br>
+  <div class="row-fluid"> <!-- third row starts -->
     <input type="text" id="words" width=150/>
     <i id="question" class="icon-question-sign" rel="tooltip"></i>
     <br>
@@ -488,5 +482,6 @@ bShare.addEntry({
 		//pic : url
 	});
 </script>
+</div>  <!-- lcontainer ends -->
   </body>
 </html>
