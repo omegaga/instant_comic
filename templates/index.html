@@ -107,8 +107,13 @@
     <canvas id="canvas" height=300 width=55></canvas>
     -->
     <input type="text" id="words" width=150/>
-    <button id="submit" class="btn btn-large btn-success">Submit</button>
+    <!-- <button id="submit" class="btn btn-large btn-success">Submit</button> -->
+    <button id="submit0" class="btn btn-large btn-success">1</button>
+    <button id="submit1" class="btn btn-large btn-success">2</button>
+    <button id="submit2" class="btn btn-large btn-success">3</button>
+    <button id="submit3" class="btn btn-large btn-success">4</button>
     <input type="file" id="file" class=" btn-larege" />
+    <button id="drawbutton" class="btn btn-large btn-success">Draw</button>
   </div> <!-- second row ends -->
 
       <div class="row-fluid"> <!-- third row starts-->
@@ -125,7 +130,8 @@
      video        = document.querySelector('#video'),
      rtcanvas     = document.querySelector('#rtcanvas'),
      photo        = document.querySelector('#photo'),
-     filterbutton  = document.querySelector('#filterbutton'),
+     drawbutton   = document.querySelector('#drawbutton'),
+     filterbutton = document.querySelector('#filterbutton'),
      //filter       = document.querySelector('#filtercheck'),
      filtercanvas = document.querySelector('#filtercanvas'),
      comcanvas0   = document.querySelector('#comcanvas0'),
@@ -133,7 +139,11 @@
      comcanvas2   = document.querySelector('#comcanvas2'),
      comcanvas3   = document.querySelector('#comcanvas3'),
      takebutton   = document.querySelector('#take'),
-     submit       = document.querySelector('#submit'),
+     //submit       = document.querySelector('#submit'),
+     submit0      = document.querySelector('#submit0'),
+     submit1      = document.querySelector('#submit1'),
+     submit2      = document.querySelector('#submit2'),
+     submit3      = document.querySelector('#submit3'),
      words        = document.querySelector('#words'),
      width = 480,
      height = 0,
@@ -143,7 +153,6 @@
      var py = new Array();
      var wsource = new Array();
      var comicIndex = 4;
-     var total = 0;
      var isfilter = false;
 
      /*
@@ -234,6 +243,7 @@ function takePhoto() {
       var rtct = rtcanvas.getContext("2d");
       rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
       drawrtCanvas();
+      console.log(counter);
       var comcanvas = document.getElementById("comcanvas"+counter.toString());
       var comctx = comcanvas.getContext('2d');
       var data = rtcanvas.toDataURL('image/png');
@@ -243,7 +253,7 @@ function takePhoto() {
       comctx.drawImage(img,0,0);
       reinit(counter);
       ++counter;
-      if (counter == 4) {
+      if (counter == comicIndex) {
           counter = 0;
       }
       //comcanvas.style.border-image="url(./static/img/4square.png) 30 30 round";
@@ -304,11 +314,13 @@ function dImage(index) {
   $("#comcanvas").mouseout(function(e){handleMouseOut(e);});
 }
 
-function drawOnCanvas() {
-	  drawOnCanvas2(0)
-	  drawOnCanvas2(1)
-	  drawOnCanvas2(2)
-	  drawOnCanvas2(3)
+  function drawOnCanvas(n) {
+      switch(n) {
+          case 0: drawOnCanvas2(0); break;
+          case 1: drawOnCanvas2(1); break;
+          case 2: drawOnCanvas2(2); break;
+          case 3: drawOnCanvas2(3); break;
+      }
   }
 
   function drawfilter() {
@@ -356,17 +368,52 @@ function drawOnCanvas() {
           video.style.display = "block";
       }
   }
+  function drawlocalimage() {
+      var ctx = document.getElementById('comcanvas' + counter.toString()).getContext('2d'),
+      img = new Image(),
+      f = document.getElementById("file").files[0],
+      url = window.URL || window.webkitURL,
+      src = url.createObjectURL(f);
+      img.src = src;
+      img.onload = function(){
+          ctx.drawImage(img, 0, 0, width, height);
+          url.revokeObjectURL(src);
+      }
+      counter = (counter + 1) % comicIndex;
+  }
   filterbutton.addEventListener('click', function(ev){
     startFilter();
     ev.preventDefault();
   }, false);
+  /*
   submit.addEventListener('click', function(ev) {
     drawOnCanvas();
     ev.preventDefault();
   }, false);
+  */
+  submit0.addEventListener('click', function(ev) {
+      drawOnCanvas(0);
+      ev.preventDefault();
+  }, false);
+  submit1.addEventListener('click', function(ev) {
+      drawOnCanvas(1);
+      ev.preventDefault();
+  }, false);
+  submit2.addEventListener('click', function(ev) {
+      drawOnCanvas(2);
+      ev.preventDefault();
+  }, false);
+  submit3.addEventListener('click', function(ev) {
+      drawOnCanvas(3);
+      ev.preventDefault();
+  }, false);
   takebutton.addEventListener('click', function(ev) {
     takePhoto();
     ev.preventDefault();
+  }, false);
+  drawbutton.addEventListener('click', function(ev) {
+      drawlocalimage();
+      ev.preventDefault();
   }, false);
   /*
   $('input[name=rtcheck]').change(function(){
