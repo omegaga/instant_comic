@@ -76,7 +76,7 @@
     </div>
     <button id="startbutton">start</button>
     <button id="take">Take photo</button>
-    <canvas id="canvas" height=300 width=50></canvas>
+    <canvas id="canvas" height=300 width=55></canvas>
     <input type="text" id="words" width=200/>
     <button id="submit">submit</button>
     <canvas id="comcanvas"></canvas>
@@ -95,6 +95,12 @@
       width = 480,
       height = 0,
       counter = 0;
+  var images = new Array();
+  var px = new Array();
+  var py = new Array();
+  var wsource = new Array();
+  var comicIndex = 4;
+  var total = 0;
     
     /*
   var ctrack = new clm.tracker({useWebGL : true});
@@ -124,24 +130,27 @@
       console.log("An error occured! " + err);
     }
   );
-
-
-  video.addEventListener('canplay', function(ev){
-    if (!streaming) {
-      height = video.videoHeight / (video.videoWidth/width);
-      video.setAttribute('width', width);
-      video.setAttribute('height', height);
-      rtcanvas.setAttribute('width', width);
-      rtcanvas.setAttribute('height', height);
-      comcanvas.setAttribute('width', width * 2);
-      comcanvas.setAttribute('height', height * 2);
-      streaming = true;
-    }
+  video.addEventListener('canplay', function(ev) {
+      if (!streaming) {
+          height = video.videoHeight / (video.videoWidth/width);
+          video.setAttribute('width', width);
+          video.setAttribute('height', height);
+          rtcanvas.setAttribute('width', width);
+          rtcanvas.setAttribute('height', height);
+          comcanvas.setAttribute('width', width * 2);
+          comcanvas.setAttribute('height', height * 2);
+          px[0] = 0;
+          py[0] = 0;
+          px[1] = width;
+          py[1] = 0;
+          px[2] = 0;
+          py[2] = height;
+          px[3] = width;
+          py[3] = height;
+          streaming = true;
+      }
   }, false);
-
-  function ostu(img) {
-      0
-  }
+    
   function drawrtCanvas() {
       rtcanvas.width = width;
       rtcanvas.height = height;
@@ -181,22 +190,140 @@
       img.setAttribute('src', data);
       var canvas = document.getElementById("canvas");
       var wordsdata = canvas.toDataURL('image/png');
+      images[counter] = img;
+      wsource[counter] = wordsdata;
+      total = (total == 4? total + 1 : 4);
       if (counter == 0) {
-          comctx.drawImage(img, 0, 0);
-          dImage(0, 0, wordsdata);
+          comctx.drawImage(img, px[counter], py[counter]);
+          dImage(counter);
       } else  if (counter == 1) {
-          comctx.drawImage(img, comcanvas.width / 2, 0);
+          comctx.drawImage(img, px[counter], py[counter]);
+          dImage(counter);
       } else if (counter == 2) {
-          comctx.drawImage(img, 0, comcanvas.height / 2);
+          comctx.drawImage(img, px[counter], py[counter]);
+          dImage(counter);
       } else if (counter == 3) {
-          comctx.drawImage(img, comcanvas.width / 2, comcanvas.height / 2);
+          comctx.drawImage(img, px[counter], py[counter]);
+          dImage(counter);
       }
-      ++counter;
-      if (counter == 4) {
-          counter = 0;
-      }
+      counter = (counter + 1) % comicIndex;
   }
-    /*
+
+  function dImage(index) {
+      var canvas = document.getElementById("comcanvas");
+      var ctx = canvas.getContext("2d");
+      var img = new Image();
+      img.onload = function() {
+          ctx.drawImage(img, px[index], py[index]);
+      }
+      img.src = wsource[index];
+      //img.src = "../static/img/test3.jpg";
+      var canvasOffset = $("#comcanvas").offset();
+      var offsetX = canvasOffset.left;
+      var offsetY = canvasOffset.top;
+      var canvasWidth = canvas.width;
+      var canvasHeight = canvas.height;
+      var isDragging = false;
+      var imgi = index;
+      function handleMouseDown(e) {
+          // canMouseX = parseInt(e.clientX - offsetX);
+          // canMouseY = parseInt(e.clientY - offsetY);
+          canMouseX = parseInt(e.clientX);
+          canMouseY = parseInt(e.clientY);
+          isDragging = true;
+      }
+      function handleMouseUp(e) {
+          // canMouseX = parseInt(e.clientX - offsetX);
+          // canMouseY = parseInt(e.clientY - offsetY);
+          canMouseX = parseInt(e.clientX);
+          canMouseY = parseInt(e.clientY);
+          isDragging = false;
+      }
+      function handleMouseOut(e) {
+          // canMouseX = parseInt(e.clientX - offsetX);
+          // canMouseY = parseInt(e.clientY - offsetY);
+          canMouseX = parseInt(e.clientX);
+          canMouseY = parseInt(e.clientY);
+      }
+      function handleMouseMove(e) {
+          // canMouseX = parseInt(e.clientX - offsetX);
+          // canMouseY = parseInt(e.clientY - offsetY);
+          canMouseX = parseInt(e.clientX);
+          canMouseY = parseInt(e.clientY);
+          // if the drag flag is set, clear the canvas and draw the image
+          if (isDragging) {
+              ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+              ctx.drawImage(images[imgi], px[imgi], py[imgi]);
+              //ctx.drawImage(img, canMouseX - 128 / 2, canMouseY - 120 / 2, img.width, img.height);
+              ctx.drawImage(img, canMouseX - img.width / 2, canMouseY - img.height / 2, img.width, img.height);
+          }
+      }
+      $("#comcanvas").mousedown(function(e){handleMouseDown(e);});
+      $("#comcanvas").mousemove(function(e){handleMouseMove(e);});
+      $("#comcanvas").mouseup(function(e){handleMouseUp(e);});
+      $("#comcanvas").mouseout(function(e){handleMouseOut(e);});
+  }
+  function drawLoop() {
+      requestAnimFrame(drawLoop);
+      var rtct = rtcanvas.getContext("2d");
+      rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
+      drawrtCanvas();
+      /*
+      if (ctrack.getCurrentPosition()) {
+          ctrack.draw(rtcanvas);
+      }
+      */
+  }
+  function startVideo() {
+      video.display = "none";
+      //ctrack.start(video);
+      drawLoop();
+  }
+
+  function isChinese(str) {
+      if(/.*[\u4e00-\u9fa5]+.*$/.test(str))
+          return true;
+      return false; 
+  }
+
+  function drawOnCanvas() {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      var string = words.value;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = 'bold 12pt Heiti';
+      var i = 0, x = 0, y = 20;
+      var line = "";
+      for (; i < string.length; ++i) {
+          var lw = ctx.measureText(line).width;
+          if (lw + ctx.measureText(string[i]).width < canvas.width) {
+              line += string[i];
+          } else {
+              ctx.fillText(line, x, y);
+              line = string[i];
+              x = 0;
+              y += 20;
+          }
+      }
+      if (line.length > 0) {
+          ctx.fillText(line, x, y);
+      }
+      
+  }
+
+  startbutton.addEventListener('click', function(ev){
+      startVideo();
+      ev.preventDefault();
+  }, false);
+  submit.addEventListener('click', function(ev) {
+      drawOnCanvas();
+      ev.preventDefault();
+  }, false);
+  takebutton.addEventListener('click', function(ev) {
+      takePhoto();
+      ev.preventDefault();
+  }, false);
+  /* the codes below is written by lpy for drag photo
   function dImage() {
       var canvas = document.getElementById("canvas");
       var ctx = canvas.getContext("2d");
@@ -242,121 +369,19 @@
       $("#canvas").mouseout(function(e){handleMouseOut(e);});
   }
   */
-  function dImage(x, y, source) {
-      var canvas = document.getElementById("comcanvas");
-      var ctx = canvas.getContext("2d");
-      var img = new Image();
-      img.onload = function() {
-          //ctx.drawImage(img, 0, 0);
-          ctx.drawImage(img, x, y);
-      }
-      img.src = source;
-      //img.src = "../static/img/test3.jpg";
-      var canvasOffset = $("#comcanvas").offset();
-      var offsetX = canvasOffset.left;
-      var offsetY = canvasOffset.top;
-      var canvasWidth = canvas.width;
-      var canvasHeight = canvas.height;
-      var isDragging = false;
-      function handleMouseDown(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-          isDragging = true;
-      }
-      function handleMouseUp(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-          isDragging = false;
-      }
-      function handleMouseOut(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-      }
-      function handleMouseMove(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-          // if the drag flag is set, clear the canvas and draw the image
-          if (isDragging) {
-              ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-              ctx.drawImage(img, canMouseX - 128 / 2, canMouseY - 120 / 2, img.width, img.height);
-          }
-      }
-      $("#comcanvas").mousedown(function(e){handleMouseDown(e);});
-      $("#comcanvas").mousemove(function(e){handleMouseMove(e);});
-      $("#comcanvas").mouseup(function(e){handleMouseUp(e);});
-      $("#comcanvas").mouseout(function(e){handleMouseOut(e);});
+  /* the codes below is written by nemomojie for Chinese fonts wrap...
+  var cnt = 0;
+  for (i = 0 ; i < string.length ; i++) {
+      if (isChinese(string[i]) && cnt % 6 == 5) cnt++;
+      var height = 15 + (parseInt(cnt / 6)) * 30;
+      var width = (cnt % 6) * (50 / 6);
+      console.log(cnt.toString()+" "+ width.toString() + " " + height.toString());
+      ctx.fillText(string[i], width, height);
+      if (isChinese(string[i]) == true)
+          cnt += 2;
+      else cnt++;
   }
-  function drawLoop() {
-      requestAnimFrame(drawLoop);
-      var rtct = rtcanvas.getContext("2d");
-      rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
-      drawrtCanvas();
-      /*
-      if (ctrack.getCurrentPosition()) {
-          ctrack.draw(rtcanvas);
-      }
-	  */
-  }
-  function startVideo() {
-      video.display = "none";
-      //dImage();
-      //ctrack.start(video);
-      drawLoop();
-  }
-
-  function isChinese(str) {
-      if(/.*[\u4e00-\u9fa5]+.*$/.test(str))
-          return true;
-      return false; 
-  }
-
-  function drawOnCanvas() {
-      var canvas = document.getElementById("canvas");
-      var ctx = canvas.getContext("2d");
-      var string = words.value;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = 'italic 12pt Heiti';
-      var i = 0, x = 0, y = 20;
-      var line = "";
-      for (; i < string.length; ++i) {
-          var lw = ctx.measureText(line).width;
-          if (lw + ctx.measureText(string[i]).width < canvas.width) {
-              line += string[i];
-          } else {
-              ctx.fillText(line, x, y);
-              line = string[i];
-              x = 0;
-              y += 20;
-          }
-      }
-      if (line.length > 0) {
-          ctx.fillText(line, x, y);
-      }
-      // var cnt = 0;
-      // for (i = 0 ; i < string.length ; i++) {
-      //     if (isChinese(string[i]) && cnt % 6 == 5) cnt++;
-      //     var height = 15 + (parseInt(cnt / 6)) * 30;
-      //     var width = (cnt % 6) * (50 / 6);
-      //     console.log(cnt.toString()+" "+ width.toString() + " " + height.toString());
-      //     ctx.fillText(string[i], width, height);
-      //     if (isChinese(string[i]) == true)
-      //         cnt += 2;
-      //     else cnt++;
-      // }
-  }
-
-  startbutton.addEventListener('click', function(ev){
-      startVideo();
-      ev.preventDefault();
-  }, false);
-  submit.addEventListener('click', function(ev) {
-      drawOnCanvas();
-      ev.preventDefault();
-  }, false);
-  takebutton.addEventListener('click', function(ev) {
-      takePhoto();
-      ev.preventDefault();
-  }, false);
+  */
   
 })();
 </script>
