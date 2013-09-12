@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Animatino Decision</title>
+    <title>Animation Decision</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="./static/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -154,9 +154,10 @@
      comcanvas3   = document.querySelector('#comcanvas3'),
      takebutton   = document.querySelector('#take'),
      //submit       = document.querySelector('#submit'),
-     submit0      = document.querySelector('#submit0'), submit1      = document.querySelector('#submit1'),
-     submit2      = document.querySelector('#submit2'),
-     submit3      = document.querySelector('#submit3'),
+     //submit0      = document.querySelector('#submit0'),
+     //submit1      = document.querySelector('#submit1'),
+     //submit2      = document.querySelector('#submit2'),
+     //submit3      = document.querySelector('#submit3'),
      words        = document.querySelector('#words'),
      width = 480,
      height = 0,
@@ -418,30 +419,6 @@ function dImage(index) {
     startFilter();
     ev.preventDefault();
   }, false);
-  /*
-  submit.addEventListener('click', function(ev) {
-    drawOnCanvas();
-    ev.preventDefault();
-  }, false);
-  */
-  /*
-  submit0.addEventListener('click', function(ev) {
-      drawOnCanvas(0);
-      ev.preventDefault();
-  }, false);
-  submit1.addEventListener('click', function(ev) {
-      drawOnCanvas(1);
-      ev.preventDefault();
-  }, false);
-  submit2.addEventListener('click', function(ev) {
-      drawOnCanvas(2);
-      ev.preventDefault();
-  }, false);
-  submit3.addEventListener('click', function(ev) {
-      drawOnCanvas(3);
-      ev.preventDefault();
-  }, false);
-  */
   takebutton.addEventListener('click', function(ev) {
     takePhoto();
     ev.preventDefault();
@@ -498,6 +475,7 @@ function dImage(index) {
     <p>All rights reserved by Gaia 2013-2014.</p>
   </div>
 </div>
+<canvas id="allCanvas" style="display:none"></canvas>
 </div><!--container ends -->
 
 
@@ -505,6 +483,10 @@ function dImage(index) {
   savepic.addEventListener('click', function(ev) {
       savePic();
   },false);
+bShare.addEntry({
+		summary:"这里的漫画很好玩，你也来吧！" ,
+		//pic : url
+	});
 </script>
   </body>
 </html>
