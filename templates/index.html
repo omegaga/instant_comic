@@ -229,38 +229,6 @@ function drawrtCanvas() {
   canvas0 = document.getElementById("origin");
   delBad(rtcanvas);
 }
-/*
-function takePhoto() {
-  var rtct = rtcanvas.getContext("2d");
-  rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
-  drawrtCanvas();
-  var comctx = comcanvas.getContext('2d');
-  var data = rtcanvas.toDataURL('image/png');
-  //photo.setAttribute('src', data);
-  var img = new Image();
-  img.id = "myImage";
-  img.setAttribute('src', data);
-  var canvas = document.getElementById("canvas");
-  var wordsdata = canvas.toDataURL('image/png');
-  images[counter] = img;
-  wsource[counter] = wordsdata;
-  total = (total == 4? total + 1 : 4);
-  if (counter == 0) {
-    comctx.drawImage(img, px[counter], py[counter]);
-    dImage(counter);
-  } else  if (counter == 1) {
-    comctx.drawImage(img, px[counter], py[counter]);
-    dImage(counter);
-  } else if (counter == 2) {
-    comctx.drawImage(img, px[counter], py[counter]);
-    dImage(counter);
-  } else if (counter == 3) {
-    comctx.drawImage(img, px[counter], py[counter]);
-    dImage(counter);
-  }
-  counter = (counter + 1) % comicIndex;
-}
-*/
 
 function takePhoto() {
       var rtct = rtcanvas.getContext("2d");
@@ -343,32 +311,6 @@ function drawOnCanvas() {
 	  drawOnCanvas2(3)
   }
 
-/*
-   function drawOnCanvas() {
-   var canvas = document.getElementById("canvas");
-   var ctx = canvas.getContext("2d");
-   var string = words.value;
-   ctx.clearRect(0, 0, canvas.width, canvas.height);
-   ctx.font = 'bold 12pt Heiti';
-   var i = 0, x = 0, y = 20;
-   var line = "";
-   for (; i < string.length; ++i) {
-   var lw = ctx.measureText(line).width;
-   if (lw + ctx.measureText(string[i]).width < canvas.width) {
-   line += string[i];
-   } else {
-   ctx.fillText(line, x, y);
-   line = string[i];
-   x = 0;
-   y += 20;
-   }
-   }
-   if (line.length > 0) {
-   ctx.fillText(line, x, y);
-   }
-
-   }
- */
   function drawfilter() {
       filtercanvas.getContext('2d').drawImage(video, 0, 0, width, height);
       var data = filtercanvas.toDataURL('image/png');
@@ -380,16 +322,20 @@ function drawOnCanvas() {
       option = {brightness: 100, contrast: 0.0}
       Pixastic.process(img, "brightness", option);
       var canvas0 = option.resultCanvas;
-      canvas0.id = "origin";
       //function self-defined
       ProcessToGrayImage(canvas0, filtercanvas);
       newAlgorithm(canvas0, filtercanvas);
 
+	  option = {amount:0.025}
+	  Pixastic.process(img, "blur",option);
+	  canvas0 = option.resultCanvas;
       option = {}
-      Pixastic.process(img, "edges2",option);
+      Pixastic.process(canvas0, "edges2",option);
       canvas0 = option.resultCanvas;
       //function self-defined
       newAlgorithm(canvas0, filtercanvas, {overlay:true});
+
+	  delBad(filtercanvas);
   }
   function drawLoop() {
       if (isfilter) {
