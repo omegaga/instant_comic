@@ -44,9 +44,14 @@
       }
       #yonkoma {
 
-        border-image:url(./static/img/4square.png) 30 30 round;
+        //display: none;
+       // border-image:url(./static/img/4square.png) 10% stretch;
         height : 740px;
         width : 990px;
+      }
+      .box {
+        visibility: hidden;
+        border-image:url(./static/img/4square.png) 10% stretch;
       }
 
       #video, #rtcanvas,#comcanvas {
@@ -59,8 +64,8 @@
         */
         /*display: none;*/ } #container {
         position : relative;
-        width : 600px;
-        height : 400px;
+        width : 480px;
+        height : 360px;
       }
       
     </style>
@@ -93,7 +98,7 @@
   <div class="row-fluid"> <!-- first row starts -->
 
     <div class="span6"><!-- first column starts -->
-      <video id="video"></video>
+      <video id="video" poster="./static/img/360p.jpg"></video>
       <canvas id="filtercanvas" style="display:none"></canvas>
     </div> <!-- first column ends -->
     <div class="span6"><!-- second column starts -->
@@ -121,15 +126,16 @@
 
       <div class="row-fluid"> <!-- third row starts-->
     <div id="yonkoma" class="span6"><!-- first column starts -->
-      <canvas id="comcanvas0"></canvas>
-      <canvas id="comcanvas1"></canvas>
-      <canvas id="comcanvas2"></canvas>
-      <canvas id="comcanvas3"></canvas>
+      <canvas class="box"id="comcanvas0"></canvas>
+      <canvas class="box"id="comcanvas1"></canvas>
+      <canvas class="box" id="comcanvas2"></canvas>
+      <canvas class="box" id="comcanvas3"></canvas>
     </div> <!-- first column ends -->
   </div> <!-- third row ends -->
   <script>
     (function() {
      var streaming = false,
+     yonkoma      = document.querySelector('#yonkoma'),
      video        = document.querySelector('#video'),
      rtcanvas     = document.querySelector('#rtcanvas'),
      photo        = document.querySelector('#photo'),
@@ -248,6 +254,7 @@ function takePhoto() {
       drawrtCanvas();
       console.log(counter);
       var comcanvas = document.getElementById("comcanvas"+counter.toString());
+      comcanvas.style.visibility="visible";
       var comctx = comcanvas.getContext('2d');
       var data = rtcanvas.toDataURL('image/png');
       var img = new Image();

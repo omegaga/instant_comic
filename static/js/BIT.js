@@ -78,7 +78,7 @@ function drawOnCanvas2(n)
   var canvasData = imageInfo[0];
   var ctx = canvas.getContext("2d");
   var string = document.getElementById("words").value;
-  ctx.font = 'italic 12pt Heiti';
+  ctx.font = 'italic 18pt Heiti';
   var cnt = 0;
   var i,j;
   for (i = 0 ; i < string.length ; i++)
@@ -90,8 +90,8 @@ function drawOnCanvas2(n)
   var line;
   var flag = true;
   var start_height , start_width;
-  var per_height = 15;
-  var per_width = 50 / 6;
+  var per_height = 25;
+  var per_width = 80 / 6;
 
   var x3 , y3 , x4 , y4;
   for (line = 1 ; flag && line <= string.length; line++)
