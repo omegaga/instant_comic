@@ -180,41 +180,11 @@
       canvas0 = document.getElementById("origin");
       delBad(rtcanvas);
   }
-  /*
-  function takePhoto() {
-	  var rtct = rtcanvas.getContext("2d");
-      rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
-      drawrtCanvas();
-      var comctx = comcanvas.getContext('2d');
-      var data = rtcanvas.toDataURL('image/png');
-      //photo.setAttribute('src', data);
-      var img = new Image();
-      img.id = "myImage";
-      img.setAttribute('src', data);
-      var canvas = document.getElementById("canvas");
-      //var wordsdata = canvas.toDataURL('image/png');
-      images[counter] = img;
-      //wsource[counter] = wordsdata;
-      total = (total == 4? total + 1 : 4);
-      if (counter == 0) {
-          comctx.drawImage(img, px[counter], py[counter]);
-          dImage(counter);
-      } else  if (counter == 1) {
-          comctx.drawImage(img, px[counter], py[counter]);
-          dImage(counter);
-      } else if (counter == 2) {
-          comctx.drawImage(img, px[counter], py[counter]);
-          dImage(counter);
-      } else if (counter == 3) {
-          comctx.drawImage(img, px[counter], py[counter]);
-          dImage(counter);
-      }
-      counter = (counter + 1) % comicIndex;
-  }
-  */
 
-var rtct = rtcanvas.getContext("2d");
-      rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
+  function takephoto()
+  {
+	  var rtct = rtcanvas.getContext("2d");
+	  rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
       drawrtCanvas();
       var comctx = comcanvas.getContext('2d');
       var data = rtcanvas.toDataURL('image/png');
@@ -238,6 +208,7 @@ var rtct = rtcanvas.getContext("2d");
       if (counter == 4) {
           counter = 0;
       }
+  }
 
   function dImage(index) {
       var canvas = document.getElementById("comcanvas");
@@ -310,12 +281,6 @@ var rtct = rtcanvas.getContext("2d");
       drawLoop();
   }
 
-  function isChinese(str) {
-      if(/.*[\u4e00-\u9fa5]+.*$/.test(str))
-          return true;
-      return false; 
-  }
-
   function drawOnCanvas() {
   drawOnCanvas2(0,0,0,comcanvas.height/2,comcanvas.width/2);
 	  drawOnCanvas2(1,0,comcanvas.width/2,comcanvas.height/2,comcanvas.width);
@@ -353,52 +318,6 @@ var rtct = rtcanvas.getContext("2d");
       takePhoto();
       ev.preventDefault();
   }, false);
-  /* the codes below is written by lpy for drag photo
-  function dImage() {
-      var canvas = document.getElementById("canvas");
-      var ctx = canvas.getContext("2d");
-      var img = new Image();
-      img.width = 100;
-      img.height = 100;
-      img.onload = function() {
-          ctx.drawImage(img, 0, 0);
-      }
-      img.src = "../static/img/test3.jpg";
-      var canvasOffset = $("#canvas").offset();
-      var offsetX = canvasOffset.left;
-      var offsetY = canvasOffset.top;
-      var canvasWidth = canvas.width;
-      var canvasHeight = canvas.height;
-      var isDragging = false;
-      function handleMouseDown(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-          isDragging = true;
-      }
-      function handleMouseUp(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-          isDragging = false;
-      }
-      function handleMouseOut(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-      }
-      function handleMouseMove(e) {
-          canMouseX = parseInt(e.clientX - offsetX);
-          canMouseY = parseInt(e.clientY - offsetY);
-          // if the drag flag is set, clear the canvas and draw the image
-          if (isDragging) {
-              ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-              ctx.drawImage(img, canMouseX - 128 / 2, canMouseY - 120 / 2, img.width, img.height);
-          }
-      }
-      $("#canvas").mousedown(function(e){handleMouseDown(e);});
-      $("#canvas").mousemove(function(e){handleMouseMove(e);});
-      $("#canvas").mouseup(function(e){handleMouseUp(e);});
-      $("#canvas").mouseout(function(e){handleMouseOut(e);});
-  }
-  
 })();
 </script>
 </body>

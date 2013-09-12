@@ -2,7 +2,6 @@ function addEntry()
 {
 	var canvas = document.getElementById("rtcanvas");
 	var url = canvas.toDataURL('image/jpg');
-	//console.log(url);
 	bShare.addEntry({
 		summary:"I have my own comic!" ,
 		pic : url
@@ -11,8 +10,21 @@ function addEntry()
 
 function savePic()
 {
-	var canvas = document.getElementById("rtcanvas");
+	var canvas = document.getElementById("allCanvas");
+	canvas.setAttribute('width',960);
+	canvas.setAttribute('height',720);
+	var ctx = canvas.getContext('2d');
 	var type = 'png';
+	for (var i = 0 ; i < 4 ; i++)
+	{
+		var comcanvas = document.getElementById("comcanvas"+i.toString());
+		var img = new Image();
+	   	img.setAttribute('src',comcanvas.toDataURL(type));
+		if (i == 0) ctx.drawImage(img,0,0);
+		if (i == 1) ctx.drawImage(img,480,0,480,360);
+		if (i == 2) ctx.drawImage(img,0,360,480,360);
+		if (i == 3) ctx.drawImage(img,480,360,480,360);
+	}
 	var imgData = canvas.toDataURL(type);
 	var _fixType = function(type){
 		type = type.toLowerCase().replace(/jpg/i,'jpeg');
@@ -32,8 +44,8 @@ function savePic()
 		save_link.dispatchEvent(event);
 	};
 
-	// 下载后的问题名
-	var filename = 'baidufe_' + (new Date()).getTime() + '.' + type;
+	// 下载后的文件名
+	var filename = 'Animation' + (new Date()).getTime() + '.' + type;
 	// download
 	saveFile(imgData,filename);
 }	
