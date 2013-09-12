@@ -39,6 +39,13 @@
         height: 100%;
         /*background: linear-gradient( #333, #000);*/
       }
+      #yonkoma {
+
+        border-image:url(./static/img/4square.png) 30 30 round;
+        height : 740px;
+        width : 990px;
+      }
+
       #video, #rtcanvas,#comcanvas {
         /*
         -o-transform : scaleX(-1);
@@ -47,19 +54,7 @@
         -ms-filter : fliph;  //IE
         filter : fliph;   //IE
         */
-        /*display: none;*/
-      }
-      /* delete
-      #startbutton, #submit, #take {
-        background: green;
-        border: none;
-        color: #fff;
-        margin: 100px 20px 20px 20px;
-        padding: 10px 20px;
-        font-size: 20px;
-      }
-      */
-      #container {
+        /*display: none;*/ } #container {
         position : relative;
         width : 600px;
         height : 400px;
@@ -105,7 +100,8 @@
 
   <div class="row-fluid"> <!-- second row starts -->
     <button id="startbutton" class="btn btn-large btn-success">Start</button>
-    <input type="checkbox" id="filtercheck" name="rtcheck">rtfilter
+    <input type="checkbox"  id="filtercheck" name="rtcheck">
+    <label class="control-label" for="filtercheck" style="display:inline"> Filter On</label>
     <button id="take" class="btn btn-large btn-success">Take photo</button>
     <!--
     <canvas id="canvas" height=300 width=55></canvas>
@@ -115,20 +111,26 @@
   </div> <!-- second row ends -->
 
       <div class="row-fluid"> <!-- third row starts-->
-    <div class="span6"><!-- second column starts -->
-      <canvas id="comcanvas"></canvas>
-    </div> <!-- second column ends -->
+    <div id="yonkoma" class="span6"><!-- first column starts -->
+      <canvas id="comcanvas0"></canvas>
+      <canvas id="comcanvas1"></canvas>
+      <canvas id="comcanvas2"></canvas>
+      <canvas id="comcanvas3"></canvas>
+    </div> <!-- first column ends -->
   </div> <!-- third row ends -->
   <script>
     (function() {
      var streaming = false,
      video        = document.querySelector('#video'),
      rtcanvas     = document.querySelector('#rtcanvas'),
-     comcanvas    = document.querySelector('#comcanvas'),
      photo        = document.querySelector('#photo'),
      startbutton  = document.querySelector('#startbutton'),
      filter       = document.querySelector('#filtercheck'),
      filtercanvas = document.querySelector('#filtercanvas'),
+     comcanvas0   = document.querySelector('#comcanvas0'),
+     comcanvas1   = document.querySelector('#comcanvas1'),
+     comcanvas2   = document.querySelector('#comcanvas2'),
+     comcanvas3   = document.querySelector('#comcanvas3'),
      takebutton   = document.querySelector('#take'),
      submit       = document.querySelector('#submit'),
      words        = document.querySelector('#words'),
@@ -174,10 +176,16 @@
          video.setAttribute('height', height);
          rtcanvas.setAttribute('width', width);
          rtcanvas.setAttribute('height', height);
-         comcanvas.setAttribute('width', width * 2);
-         comcanvas.setAttribute('height', height * 2);
          filtercanvas.setAttribute('width', width);
          filtercanvas.setAttribute('height', height);
+         comcanvas0.setAttribute('height', height);
+         comcanvas0.setAttribute('width', width);
+         comcanvas1.setAttribute('width', width);
+         comcanvas1.setAttribute('height', height);
+         comcanvas2.setAttribute('width', width);
+         comcanvas2.setAttribute('height', height);
+         comcanvas3.setAttribute('width', width);
+         comcanvas3.setAttribute('height', height);
          px[0] = 0;
          py[0] = 0;
          px[1] = width;
@@ -257,28 +265,19 @@ function takePhoto() {
       var rtct = rtcanvas.getContext("2d");
       rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
       drawrtCanvas();
+      var comcanvas = document.getElementById("comcanvas"+counter.toString());
       var comctx = comcanvas.getContext('2d');
       var data = rtcanvas.toDataURL('image/png');
       var img = new Image();
       img.id = "myImage";
       img.setAttribute('src', data);
-      if (counter == 0) {
-          comctx.drawImage(img, 0, 0);
-          reinit(0);
-      } else  if (counter == 1) {
-          comctx.drawImage(img, comcanvas.width / 2, 0);
-          reinit(1, 0, comcanvas.width / 2);
-      } else if (counter == 2) {
-          comctx.drawImage(img, 0, comcanvas.height / 2);
-          reinit(2, comcanvas.height / 2, 0);
-      } else if (counter == 3) {
-          comctx.drawImage(img, comcanvas.width / 2, comcanvas.height / 2);
-          reinit(3, comcanvas.height / 2, comcanvas.width / 2);
-      }
+      comctx.drawImage(img,0,0);
+      reinit(counter);
       ++counter;
       if (counter == 4) {
           counter = 0;
       }
+      //comcanvas.style.border-image="url(./static/img/4square.png) 30 30 round";
   }
 
 function dImage(index) {
@@ -337,10 +336,10 @@ function dImage(index) {
 }
 
 function drawOnCanvas() {
-	  drawOnCanvas2(0,0,0,comcanvas.height/2,comcanvas.width/2);
-	  drawOnCanvas2(1,0,comcanvas.width/2,comcanvas.height/2,comcanvas.width);
-	  drawOnCanvas2(2,comcanvas.height/2,0,comcanvas.height,comcanvas.width/2);
-	  drawOnCanvas2(3,comcanvas.height/2,comcanvas.width/2,comcanvas.height,comcanvas.width);
+	  drawOnCanvas2(0)
+	  drawOnCanvas2(1)
+	  drawOnCanvas2(2)
+	  drawOnCanvas2(3)
   }
 
 /*
