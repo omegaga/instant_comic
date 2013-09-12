@@ -78,7 +78,7 @@ function drawOnCanvas2(n)
   var canvasData = imageInfo[0];
   var ctx = canvas.getContext("2d");
   var string = document.getElementById("words").value;
-  ctx.font = 'italic 12pt Heiti';
+  ctx.font = 'italic 18pt Heiti';
   var cnt = 0;
   var i,j;
   for (i = 0 ; i < string.length ; i++)
