@@ -1,5 +1,6 @@
 function addEntry()
 {
+	drawOnOne();
 	var canvas = document.getElementById("rtcanvas");
 	var url = canvas.toDataURL('image/jpg');
 	bShare.addEntry({
@@ -10,21 +11,9 @@ function addEntry()
 
 function savePic()
 {
+	drawOnOne();
 	var canvas = document.getElementById("allCanvas");
-	canvas.setAttribute('width',960);
-	canvas.setAttribute('height',720);
-	var ctx = canvas.getContext('2d');
 	var type = 'png';
-	for (var i = 0 ; i < 4 ; i++)
-	{
-		var comcanvas = document.getElementById("comcanvas"+i.toString());
-		var img = new Image();
-	   	img.setAttribute('src',comcanvas.toDataURL(type));
-		if (i == 0) ctx.drawImage(img,0,0);
-		if (i == 1) ctx.drawImage(img,480,0,480,360);
-		if (i == 2) ctx.drawImage(img,0,360,480,360);
-		if (i == 3) ctx.drawImage(img,480,360,480,360);
-	}
 	var imgData = canvas.toDataURL(type);
 	var _fixType = function(type){
 		type = type.toLowerCase().replace(/jpg/i,'jpeg');
@@ -49,3 +38,22 @@ function savePic()
 	// download
 	saveFile(imgData,filename);
 }	
+
+function drawOnOne()
+{
+	var canvas = document.getElementById("allCanvas");
+	canvas.setAttribute('width',960);
+	canvas.setAttribute('height',720);
+	var ctx = canvas.getContext('2d');
+	var type = 'png';
+	for (var i = 0 ; i < 4 ; i++)
+	{
+		var comcanvas = document.getElementById("comcanvas"+i.toString());
+		var img = new Image();
+	   	img.setAttribute('src',comcanvas.toDataURL(type));
+		if (i == 0) ctx.drawImage(img,0,0);
+		if (i == 1) ctx.drawImage(img,480,0,480,360);
+		if (i == 2) ctx.drawImage(img,0,360,480,360);
+		if (i == 3) ctx.drawImage(img,480,360,480,360);
+	}
+}
