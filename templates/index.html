@@ -135,6 +135,7 @@
   <script>
     (function() {
      var streaming = false,
+     savepic      = document.querySelector('#savepic'),
      yonkoma      = document.querySelector('#yonkoma'),
      video        = document.querySelector('#video'),
      rtcanvas     = document.querySelector('#rtcanvas'),
@@ -149,8 +150,7 @@
      comcanvas3   = document.querySelector('#comcanvas3'),
      takebutton   = document.querySelector('#take'),
      //submit       = document.querySelector('#submit'),
-     submit0      = document.querySelector('#submit0'),
-     submit1      = document.querySelector('#submit1'),
+     submit0      = document.querySelector('#submit0'), submit1      = document.querySelector('#submit1'),
      submit2      = document.querySelector('#submit2'),
      submit3      = document.querySelector('#submit3'),
      words        = document.querySelector('#words'),
@@ -436,6 +436,7 @@ function dImage(index) {
       drawOnCanvas(3);
       ev.preventDefault();
   }, false);
+  
   takebutton.addEventListener('click', function(ev) {
     takePhoto();
     ev.preventDefault();
@@ -443,7 +444,7 @@ function dImage(index) {
   drawbutton.addEventListener('click', function(ev) {
       drawlocalimage();
       ev.preventDefault();
-  }, false);
+  },false);
   /*
   $('input[name=rtcheck]').change(function(){
 
@@ -465,13 +466,20 @@ function dImage(index) {
   init();
 })();
 </script>
-<div class="bshare-custom">
+<div class="row-fluid">
+  <div class="span6">
+  <button class="btn btn-large btn-success" id="savepic" > Save Picture </button>
+</div>
+  <div class="span6">
+<div class="row-fluid bshare-custom">
 	<a title="分享到QQ空间" class="bshare-qzone"></a>
 	<a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
 	<a title="分享到人人网" class="bshare-renren"></a>
 	<a title="分享到腾讯微博" class="bshare-qqmb"></a>
 	<a title="分享到网易微博" class="bshare-neteasemb"></a>
 	<a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span>
+</div>
+</div>
 </div>
 
 <div class="row-fluid">
@@ -483,6 +491,11 @@ function dImage(index) {
 </div><!--container ends -->
 
 <script src="http://code.jquery.com/jquery.js"></script>
-<script src="./static/js/bootstrap.min.js"></script>
+<script src="./static/js/bootstrap.min.js"></script> 
+<script type="text/javascript">
+  savepic.addEventListener('click', function(ev) {
+      savePic();
+  },false);
+</script>
   </body>
 </html>
