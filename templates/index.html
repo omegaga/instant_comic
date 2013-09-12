@@ -342,9 +342,9 @@ function dImage(index) {
       ProcessToGrayImage(canvas0, filtercanvas);
       newAlgorithm(canvas0, filtercanvas);
 
-	  option = {amount:0.025}
-	  Pixastic.process(img, "blur",option);
-	  canvas0 = option.resultCanvas;
+      option = {amount:0.025}
+      Pixastic.process(img, "blur",option);
+      canvas0 = option.resultCanvas;
       option = {}
       Pixastic.process(canvas0, "edges2",option);
       canvas0 = option.resultCanvas;
@@ -373,7 +373,8 @@ function dImage(index) {
       }
   }
   function drawlocalimage() {
-      var ctx = document.getElementById('comcanvas' + counter.toString()).getContext('2d'),
+      var target_canvas = document.getElementById('comcanvas' + counter.toString());
+      var ctx = target_canvas.getContext('2d'),
       img = new Image(),
       f = document.getElementById("file").files[0],
       url = window.URL || window.webkitURL,
@@ -381,6 +382,21 @@ function dImage(index) {
       img.src = src;
       img.onload = function(){
           ctx.drawImage(img, 0, 0, width, height);
+          // var data = ctx.toDataURL('image/png');
+          // img.setAttribute("src", data);
+          // ctx.clearRect(0, 0, width, height);
+          // var option = {};
+          // Pixastic.process(img, "brightness", option);
+          // var c0 = option.resultCanvas;
+          // ProcessToGrayImage(c0, target_canvas);
+          // newAlgorithm(c0, target_canvas);
+          // option = {amount:0.025};
+          // Pixastic.process(img, "blur",option);
+          // c0 = option.resultCanvas;
+          // option = {}
+          // Pixastic.process(c0, "edges2",option);
+          // c0 = option.resultCanvas;
+          // newAlgorithm(c0, target_canvas, {overlay:true});
           url.revokeObjectURL(src);
       }
       counter = (counter + 1) % comicIndex;
