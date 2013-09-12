@@ -30,6 +30,7 @@
     <script type="text/javascript" charset="utf-8" src="./static/js/mossefilter.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/js/Stats.js"></script>
     <script type="text/javascript" charset="utf-8" src="./static/models/model_pca_20_svm.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./static/js/BIT.js"></script>
     <style type="text/css">
       html {
         /*background: #111111;*/
@@ -215,6 +216,7 @@ function drawrtCanvas() {
   canvas0 = document.getElementById("origin");
   delBad(rtcanvas);
 }
+/*
 function takePhoto() {
   var rtct = rtcanvas.getContext("2d");
   rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
@@ -245,6 +247,36 @@ function takePhoto() {
   }
   counter = (counter + 1) % comicIndex;
 }
+*/
+
+function takePhoto() {
+      var rtct = rtcanvas.getContext("2d");
+      rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
+      drawrtCanvas();
+      var comctx = comcanvas.getContext('2d');
+      var data = rtcanvas.toDataURL('image/png');
+      var img = new Image();
+      img.id = "myImage";
+      img.setAttribute('src', data);
+      if (counter == 0) {
+          comctx.drawImage(img, 0, 0);
+		  reinit(0,0,0);
+      } else  if (counter == 1) {
+          comctx.drawImage(img, comcanvas.width / 2, 0);
+		  reinit(1,0,comcanvas.width/2);
+      } else if (counter == 2) {
+          comctx.drawImage(img, 0, comcanvas.height / 2);
+		  reinit(2,comcanvas.height/2,0);
+      } else if (counter == 3) {
+          comctx.drawImage(img, comcanvas.width / 2, comcanvas.height 
+/ 2);
+		  reinit(3,comcanvas.height/2,comcanvas.width/2);
+      }
+      ++counter;
+      if (counter == 4) {
+          counter = 0;
+      }
+  }
 
 function dImage(index) {
   var canvas = document.getElementById("comcanvas");
@@ -300,28 +332,13 @@ function dImage(index) {
   $("#comcanvas").mouseup(function(e){handleMouseUp(e);});
   $("#comcanvas").mouseout(function(e){handleMouseOut(e);});
 }
-function drawLoop() {
-  requestAnimFrame(drawLoop);
-  var rtct = rtcanvas.getContext("2d");
-  rtct.clearRect(0, 0, rtcanvas.width, rtcanvas.height);
-  drawrtCanvas();
-  /*
-     if (ctrack.getCurrentPosition()) {
-     ctrack.draw(rtcanvas);
-     }
-   */
-}
-function startVideo() {
-  video.display = "none";
-  //ctrack.start(video);
-  //drawLoop();
-}
 
-function isChinese(str) {
-  if(/.*[\u4e00-\u9fa5]+.*$/.test(str))
-    return true;
-  return false; 
-}
+function drawOnCanvas() {
+	  drawOnCanvas2(0,0,0,comcanvas.height/2,comcanvas.width/2);
+	  drawOnCanvas2(1,0,comcanvas.width/2,comcanvas.height/2,comcanvas.width);
+	  drawOnCanvas2(2,comcanvas.height/2,0,comcanvas.height,comcanvas.width/2);
+	  drawOnCanvas2(3,comcanvas.height/2,comcanvas.width/2,comcanvas.height,comcanvas.width);
+  }
 
 /*
    function drawOnCanvas() {
@@ -421,6 +438,7 @@ $("#canvas").mouseout(function(e){handleMouseOut(e);});
    else cnt++;
    }
  */
+ init();
 
 })();
 </script>
