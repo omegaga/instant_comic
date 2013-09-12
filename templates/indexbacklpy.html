@@ -96,7 +96,6 @@
 
     <div class="span6"><!-- first column starts -->
       <video id="video"></video>
-      <canvas id="filtercanvas" style="display:none"></canvas>
     </div> <!-- first column ends -->
     <div class="span6"><!-- second column starts -->
       <canvas id="rtcanvas"></canvas>
@@ -104,8 +103,7 @@
   </div> <!-- first row ends -->
 
   <div class="row-fluid"> <!-- second row starts -->
-    <button id="startbutton" class="btn btn-large btn-success">Start</button>
-    <input type="checkbox" id="filtercheck" name="rtcheck">rtfilter
+    <button id="startbutton" class="btn btn-large btn-success">Start</button> 
     <button id="take" class="btn btn-large btn-success">Take photo</button>
     <!--
     <canvas id="canvas" height=300 width=55></canvas>
@@ -127,8 +125,6 @@
      comcanvas    = document.querySelector('#comcanvas'),
      photo        = document.querySelector('#photo'),
      startbutton  = document.querySelector('#startbutton'),
-     filter       = document.querySelector('#filtercheck'),
-     filtercanvas = document.querySelector('#filtercanvas'),
      takebutton   = document.querySelector('#take'),
      submit       = document.querySelector('#submit'),
      words        = document.querySelector('#words'),
@@ -141,7 +137,6 @@
      var wsource = new Array();
      var comicIndex = 4;
      var total = 0;
-     var isfilter = false;
 
      /*
         var ctrack = new clm.tracker({useWebGL : true});
@@ -176,8 +171,6 @@
          rtcanvas.setAttribute('height', height);
          comcanvas.setAttribute('width', width * 2);
          comcanvas.setAttribute('height', height * 2);
-         filtercanvas.setAttribute('width', width);
-         filtercanvas.setAttribute('height', height);
          px[0] = 0;
          py[0] = 0;
          px[1] = width;
@@ -264,16 +257,16 @@ function takePhoto() {
       img.setAttribute('src', data);
       if (counter == 0) {
           comctx.drawImage(img, 0, 0);
-          reinit(0);
+		  reinit(0,0,0);
       } else  if (counter == 1) {
           comctx.drawImage(img, comcanvas.width / 2, 0);
-          reinit(1, 0, comcanvas.width / 2);
+		  reinit(1,0,comcanvas.width/2);
       } else if (counter == 2) {
           comctx.drawImage(img, 0, comcanvas.height / 2);
-          reinit(2, comcanvas.height / 2, 0);
+		  reinit(2,comcanvas.height/2,0);
       } else if (counter == 3) {
           comctx.drawImage(img, comcanvas.width / 2, comcanvas.height / 2);
-          reinit(3, comcanvas.height / 2, comcanvas.width / 2);
+		  reinit(3,comcanvas.height/2,comcanvas.width/2);
       }
       ++counter;
       if (counter == 4) {
@@ -369,73 +362,90 @@ function drawOnCanvas() {
 
    }
  */
-  function drawfilter() {
-      filtercanvas.getContext('2d').drawImage(video, 0, 0, width, height);
-      var data = filtercanvas.toDataURL('image/png');
-      var img = new Image();
-      img.id = "myImage";
-      img.setAttribute('src', data);
-      setFunction(passNormal);
-      var option = {};
-      option = {brightness: 100, contrast: 0.0}
-      Pixastic.process(img, "brightness", option);
-      var canvas0 = option.resultCanvas;
-      canvas0.id = "origin";
-      //function self-defined
-      ProcessToGrayImage(canvas0, filtercanvas);
-      newAlgorithm(canvas0, filtercanvas);
 
-      option = {}
-      Pixastic.process(img, "edges2",option);
-      canvas0 = option.resultCanvas;
-      //function self-defined
-      newAlgorithm(canvas0, filtercanvas, {overlay:true});
-  }
-  function drawLoop() {
-      if (isfilter) {
-          requestAnimFrame(drawLoop);
-          var filctx = filtercanvas.getContext("2d");
-          filctx.clearRect(0, 0, filtercanvas.width, filtercanvas.height);
-          drawfilter();
-      }
-  }
-  startbutton.addEventListener('click', function(ev){
+startbutton.addEventListener('click', function(ev){
     startVideo();
     ev.preventDefault();
-  }, false);
-  submit.addEventListener('click', function(ev) {
+    }, false);
+submit.addEventListener('click', function(ev) {
     drawOnCanvas();
     ev.preventDefault();
-  }, false);
-  takebutton.addEventListener('click', function(ev) {
+    }, false);
+takebutton.addEventListener('click', function(ev) {
     takePhoto();
     ev.preventDefault();
-  }, false);
-  $('input[name=rtcheck]').change(function(){
+    }, false);
+/* the codes below is written by lpy for drag photo
+   function dImage() {
+   var canvas = document.getElementById("canvas");
+   var ctx = canvas.getContext("2d");
+   var img = new Image();
+   img.width = 100;
+   img.height = 100;
+   img.onload = function() {
+   ctx.drawImage(img, 0, 0);
+   }
+   img.src = "../static/img/test3.jpg";
+   var canvasOffset = $("#canvas").offset();
+   var offsetX = canvasOffset.left;
+   var offsetY = canvasOffset.top;
+   var canvasWidth = canvas.width;
+   var canvasHeight = canvas.height;
+   var isDragging = false;
+   function handleMouseDown(e) {
+   canMouseX = parseInt(e.clientX - offsetX);
+   canMouseY = parseInt(e.clientY - offsetY);
+   isDragging = true;
+   }
+   function handleMouseUp(e) {
+   canMouseX = parseInt(e.clientX - offsetX);
+   canMouseY = parseInt(e.clientY - offsetY);
+   isDragging = false;
+   }
+   function handleMouseOut(e) {
+   canMouseX = parseInt(e.clientX - offsetX);
+   canMouseY = parseInt(e.clientY - offsetY);
+   }
+   function handleMouseMove(e) {
+   canMouseX = parseInt(e.clientX - offsetX);
+   canMouseY = parseInt(e.clientY - offsetY);
+// if the drag flag is set, clear the canvas and draw the image
+if (isDragging) {
+ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+ctx.drawImage(img, canMouseX - 128 / 2, canMouseY - 120 / 2, img.width, img.height);
+}
+}
+$("#canvas").mousedown(function(e){handleMouseDown(e);});
+$("#canvas").mousemove(function(e){handleMouseMove(e);});
+$("#canvas").mouseup(function(e){handleMouseUp(e);});
+$("#canvas").mouseout(function(e){handleMouseOut(e);});
+}
+ */
+/* the codes below is written by nemomojie for Chinese fonts wrap...
+   var cnt = 0;
+   for (i = 0 ; i < string.length ; i++) {
+   if (isChinese(string[i]) && cnt % 6 == 5) cnt++;
+   var height = 15 + (parseInt(cnt / 6)) * 30;
+   var width = (cnt % 6) * (50 / 6);
+   console.log(cnt.toString()+" "+ width.toString() + " " + height.toString());
+   ctx.fillText(string[i], width, height);
+   if (isChinese(string[i]) == true)
+   cnt += 2;
+   else cnt++;
+   }
+ */
+ init();
 
-    if($(this).is(':checked'))
-    {
-        isfilter = true;
-        video.style.display = "none";
-        filtercanvas.style.display = "block";
-        drawLoop();
-    }
-    else
-    {
-        filtercanvas.style.display = "none";
-        video.style.display = "block";
-        // var filctx = filtercanvas.getContext('2d');
-        // filctx.clearRect(0, 0, filtercanvas.width, filtercanvas.height);
-        isfilter = false;
-    }    
-});
-  init();
 })();
 </script>
+<!--
+</div><!-- second column ends -->
+</div><!-- first row ends -->
+-->
 <div class="row-fluid">
   <div class="span12">
     <hr>
-    <p>All rights reserved by Gaia 2013-2014.</p>
+    <p>All rights reserved by Your Co. 2013-2014.</p>
   </div>
 </div>
 </div><!--container ends -->
