@@ -9,6 +9,10 @@ def index():
 @app.route("/test")
 def test():
   return render_template("comicback.html")
+  
+@app.route("/original")
+def original():
+    return render_template("original_photo.html")
 
 if __name__ == "__main__":
   app.run("0.0.0.0")
