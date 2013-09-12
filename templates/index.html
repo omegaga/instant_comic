@@ -39,12 +39,14 @@
         height: 100%;
         /*background: linear-gradient( #333, #000);*/
       }
-      #video, #rtcanvas {
+      #video, #rtcanvas,#comcanvas {
+        /*
         -o-transform : scaleX(-1);
     -webkit-transform : scaleX(-1);
         transform : scaleX(-1);
-        -ms-filter : fliph; /*IE*/
-        filter : fliph; /*IE*/
+        -ms-filter : fliph;  //IE
+        filter : fliph;   //IE
+        */
         /*display: none;*/
       }
       /* delete
@@ -270,9 +272,7 @@ function takePhoto() {
           comctx.drawImage(img, 0, comcanvas.height / 2);
 		  reinit(2,comcanvas.height/2,0);
       } else if (counter == 3) {
-          comctx.drawImage(img, comcanvas.width / 2, comcanvas.height 
-
-/ 2);
+          comctx.drawImage(img, comcanvas.width / 2, comcanvas.height / 2);
 		  reinit(3,comcanvas.height/2,comcanvas.width/2);
       }
       ++counter;
